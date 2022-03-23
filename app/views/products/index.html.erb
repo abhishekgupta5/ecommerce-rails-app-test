@@ -1,0 +1,27 @@
+<div class="grid gap-y-10 grid-cols-4 gap-x-8">
+  <% @products.each do |product| %>
+    <div>
+      <div class="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden aspect-w-7 aspect-h-8">
+        <%= image_tag product.image.representation(resize_to_limit: [1280, 1280]), class: "w-full h-full object-center object-cover" %>
+      </div>
+
+      <h3 class="mt-4 text-sm text-gray-700">
+        <%= product.name %>
+      </h3>
+
+      <p class="mt-1 text-lg font-medium text-gray-900">
+        <%= number_to_currency(product.price) %>
+      </p>
+
+      <div class="mt-6">
+        <%= form_tag(cart_items_path) do %>
+          <%= hidden_field_tag :product_id, product.id %>
+
+          <button type="submit" class="block w-full text-center bg-gray-100 border border-transparent rounded-md py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-200">
+            Add to bag
+          </button>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

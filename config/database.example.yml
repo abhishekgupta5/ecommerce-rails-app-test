@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: rails_technical_test_development
+
+test:
+  <<: *default
+  database: rails_technical_test_test
+
+production:
+  <<: *default
+  database: rails_technical_test_production
+  username: rails_technical_test
+  password: <%= ENV["RAILS_TECHNICAL_TEST_DATABASE_PASSWORD"] %>

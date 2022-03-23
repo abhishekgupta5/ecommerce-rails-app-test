@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Nebulab | Rails Technical Test</title>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+  </head>
+
+  <body class="pb-4">
+    <div class="max-w-7xl mx-auto px-4 px-8 space-y-4">
+      <%= render "shared/navigation" %>
+
+      <%= yield %>
+    </div>
+  </body>
+</html>
