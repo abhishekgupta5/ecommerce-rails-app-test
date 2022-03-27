@@ -78,8 +78,8 @@ GEM
       xpath (~> 3.2)
     childprocess (4.1.0)
     concurrent-ruby (1.1.9)
-    countries (4.1.2)
-      i18n_data (~> 0.15.0)
+    countries (4.2.3)
+      i18n_data (~> 0.16.0)
       sixarm_ruby_unaccent (~> 1.1)
     crass (1.0.6)
     credit_card_validations (3.3.0)
@@ -104,7 +104,7 @@ GEM
       activesupport (>= 5.0)
     i18n (1.8.11)
       concurrent-ruby (~> 1.0)
-    i18n_data (0.15.0)
+    i18n_data (0.16.0)
       simple_po_parser (~> 1.1)
     image_processing (1.12.1)
       mini_magick (>= 4.9.5, < 5)
@@ -214,7 +214,7 @@ GEM
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2)
-    simple_po_parser (1.1.5)
+    simple_po_parser (1.1.6)
     sixarm_ruby_unaccent (1.2.0)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
@@ -256,7 +256,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   capybara
-  countries
+  countries (~> 4.2)
   credit_card_validations
   cssbundling-rails
   debug
