@@ -91,10 +91,12 @@
             </div>
           </div>
 
-          <div>
-            <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
-            <div class="mt-1">
-              <%= a.select :country, ISO3166::Country.pluck(:iso_short_name, :alpha2), {}, autocomplete: "country-name", id: "country", class: "block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm" %>
+          <div data-controller="country">
+            <div>
+              <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+              <div class="mt-1">
+                <%= a.select :country, ISO3166::Country.pluck(:iso_short_name, :alpha2), {}, { autocomplete: "country-name", id: "country", class: "block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm", data: { action: "change->country#change" } } %>
+              </div>
             </div>
           </div>
         <% end %>
