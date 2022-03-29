@@ -7,9 +7,7 @@ class OrdersController < ApplicationController
     @order = build_order(order_params)
 
     if @order.save
-      shipping_method = ShippingMethod.find_by_country(@order.shipping_address.country)
-      @delivery_info = {shipping_method_name: shipping_method&.name,
-                        delivery_time: shipping_method&.delivery_time_in_days}
+      @delivery_info = @order.shipping_info_for_order
       cart.clear
       render :summary
     else
@@ -21,9 +19,7 @@ class OrdersController < ApplicationController
     @delivery_info_target = params[:delivery_info_target]
     @submit_button_target = params[:submit_button_target]
     @turbo_frame_target = params[:turbo_frame_target]
-    shipping_method = ShippingMethod.find_by_country(params[:country])
-    @delivery_info = {shipping_method_name: shipping_method&.name,
-                      delivery_time: shipping_method&.delivery_time_in_days}
+    @delivery_info = ShippingMethod.delivery_info_for_country(params[:country])
     respond_to do |format|
       format.turbo_stream
     end
