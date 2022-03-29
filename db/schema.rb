@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_28_115022) do
+ActiveRecord::Schema.define(version: 2022_03_29_171107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,15 @@ ActiveRecord::Schema.define(version: 2022_03_28_115022) do
     t.string "cvc", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "erp_data", force: :cascade do |t|
+    t.string "entity_id", null: false
+    t.bigint "order_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["entity_id"], name: "index_erp_data_on_entity_id_uniq", unique: true
+    t.index ["order_id"], name: "index_erp_data_on_order_id_uniq", unique: true
   end
 
   create_table "line_items", force: :cascade do |t|
