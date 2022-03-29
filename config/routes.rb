@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   namespace :erp, defaults: {format: :json} do
     resources :orders, only: :create
   end
+
+  get "orders/delivery_info", to: "orders#delivery_info"
 end
