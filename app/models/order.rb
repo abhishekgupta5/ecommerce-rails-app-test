@@ -12,4 +12,10 @@ class Order < ApplicationRecord
   def total
     line_items.sum(&:total)
   end
+
+  # @return [Hash] containing shipping_method_name and
+  # delivery_time(in days)
+  def shipping_info_for_order
+    ShippingMethod.delivery_info_for_country(shipping_address.country)
+  end
 end

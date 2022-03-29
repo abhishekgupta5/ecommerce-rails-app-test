@@ -39,5 +39,14 @@ class ShippingMethod < ApplicationRecord
     def delete_for_country(country)
       ShippingMethod.find_by_country!(country).destroy!
     end
+
+    # @param country [String] alpha2 id of the country
+    # @return [Hash] containing shipping_method_name and
+    # delivery_time(in days)
+    def delivery_info_for_country(country)
+      shipping_method = ShippingMethod.find_by_country(country)
+      {shipping_method_name: shipping_method&.name,
+       delivery_time: shipping_method&.delivery_time_in_days}
+    end
   end
 end
