@@ -60,6 +60,21 @@ RSpec.describe ShippingMethod, type: :model do
     end
   end
 
+  describe "#delivery_info_for_country" do
+    it "delivery_info_for_country for valid country" do
+      shipping_method = build_stubbed(:shipping_method)
+      allow(ShippingMethod).to receive(:delivery_info_for_country).with(shipping_method.country)
+        .and_return({shipping_method_name: shipping_method&.name,
+                                                delivery_time: shipping_method&.delivery_time_in_days})
+    end
+
+    it "delivery_info_for_country for invalid country" do
+      allow(ShippingMethod).to receive(:delivery_info_for_country).with("RANDOM")
+        .and_return({shipping_method_name: nil,
+                                                delivery_time: nil})
+    end
+  end
+
   private
 
   def shipping_method_valid_attributes
