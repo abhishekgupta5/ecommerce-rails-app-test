@@ -15,6 +15,11 @@ class Order < ApplicationRecord
     line_items.sum(&:total)
   end
 
+  # TODO: Run async in a sidekiq job when order is created
+  def associate_erp_and_order
+    ErpDatum.update_erp_data(self)
+  end
+
   # @return [Hash] containing shipping_method_name and
   # delivery_time(in days)
   def shipping_info_for_order
