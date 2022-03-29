@@ -14,6 +14,18 @@ class OrdersController < ApplicationController
     end
   end
 
+  def delivery_info
+    @delivery_info_target = params[:delivery_info_target]
+    @submit_button_target = params[:submit_button_target]
+    @turbo_frame_target = params[:turbo_frame_target]
+    shipping_method = ShippingMethod.find_by_country(params[:country])
+    @delivery_info = {shipping_method_name: shipping_method&.name,
+                      delivery_time: shipping_method&.delivery_time_in_days}
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
+
   private
 
   def build_order(params = {})
