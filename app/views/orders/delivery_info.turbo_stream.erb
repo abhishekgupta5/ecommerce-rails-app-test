@@ -1,0 +1,14 @@
+<% if @delivery_info[:shipping_method_name].present? %>
+  <%# This is a country where we deliver %>
+  <%# We render partial Confirm button since it may have been removed if user had selected an non-deliverable country %>
+  <%= turbo_stream.update(@turbo_frame_target, partial: "confirm_button") %>
+  <%= turbo_stream.update @delivery_info_target do %>
+    Your order will reach by <b><%=@delivery_info[:shipping_method_name]%></b> within <b><%=@delivery_info[:delivery_time]%> days</b>
+  <%end %>
+  <% else %>
+  <%# This is a country where we don't deliver %>
+  <%= turbo_stream.remove @submit_button_target %>
+    <%= turbo_stream.update @delivery_info_target do %>
+      Sorry, we don't deliver in your country yet!
+  <% end %>
+<% end %>
