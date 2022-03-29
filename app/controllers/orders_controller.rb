@@ -7,6 +7,9 @@ class OrdersController < ApplicationController
     @order = build_order(order_params)
 
     if @order.save
+      shipping_method = ShippingMethod.find_by_country(@order.shipping_address.country)
+      @delivery_info = {shipping_method_name: shipping_method&.name,
+                        delivery_time: shipping_method&.delivery_time_in_days}
       cart.clear
       render :summary
     else
