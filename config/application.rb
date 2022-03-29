@@ -29,5 +29,10 @@ module RailsTechnicalTest
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Use rails inbuilt async threadpool as active job backend
+    # In an ideal production system, this would be sidekiq or any other
+    # job processing backend running it's own server
+    config.active_job.queue_adapter = :async
   end
 end

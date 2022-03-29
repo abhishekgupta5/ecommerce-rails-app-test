@@ -11,13 +11,16 @@ class Order < ApplicationRecord
 
   validates :email, presence: true, format: URI::MailTo::EMAIL_REGEXP
 
+  # Happens async since this depends upon another API call.
+  # We don't want our app server to wait for an external call.
+  after_create :associate_erp_and_order
+
   def total
     line_items.sum(&:total)
   end
 
-  # TODO: Run async in a sidekiq job when order is created
   def associate_erp_and_order
-    ErpDatum.update_erp_data(self)
+    ErpUpdaterJob.perform_later(self)
   end
 
   # @return [Hash] containing shipping_method_name and
