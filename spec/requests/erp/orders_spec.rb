@@ -3,10 +3,7 @@ RSpec.describe "/erp/orders" do
     it "responds with 201 Created" do
       payload = build_payload
 
-      post erp_orders_path, params: payload.to_json, headers: {
-        "Content-Type" => "application/json",
-        "Accept" => "application/json"
-      }
+      post erp_orders_path, params: payload.to_json, headers: json_headers
 
       expect(response.status).to eq(201)
     end
@@ -14,10 +11,7 @@ RSpec.describe "/erp/orders" do
     it "responds with the entity ID" do
       payload = build_payload
 
-      post erp_orders_path, params: payload.to_json, headers: {
-        "Content-Type" => "application/json",
-        "Accept" => "application/json"
-      }
+      post erp_orders_path, params: payload.to_json, headers: json_headers
 
       expect(JSON.parse(response.body)).to match("id" => an_instance_of(String))
     end
@@ -25,10 +19,7 @@ RSpec.describe "/erp/orders" do
     it "validates the request payload" do
       payload = {invalid: "data"}
 
-      post erp_orders_path, params: payload.to_json, headers: {
-        "Content-Type" => "application/json",
-        "Accept" => "application/json"
-      }
+      post erp_orders_path, params: payload.to_json, headers: json_headers
 
       expect(response.status).to eq(422)
     end
@@ -55,5 +46,10 @@ RSpec.describe "/erp/orders" do
       }],
       total: 30.0
     }
+  end
+
+  def json_headers
+    {"Content-Type" => "application/json",
+     "Accept" => "application/json"}
   end
 end
