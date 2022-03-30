@@ -48,5 +48,13 @@ class ShippingMethod < ApplicationRecord
       {shipping_method_name: shipping_method&.name,
        delivery_time: shipping_method&.delivery_time_in_days}
     end
+
+    # This method can be cached for avoiding DB calls.
+    # Cache can be invalidated when a new shipping method
+    # is added or when country changes for an existing
+    # shipping method
+    def allowed_countries_for_shipping
+      ShippingMethod.pluck(:country)
+    end
   end
 end
