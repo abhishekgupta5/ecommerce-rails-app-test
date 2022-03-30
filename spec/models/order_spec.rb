@@ -43,4 +43,16 @@ RSpec.describe Order do
       end
     end
   end
+
+  describe "#callbacks" do
+    it "associate_erp_and_order" do
+      ActiveJob::Base.queue_adapter = :test
+      # The important thing to test here is not what happens in the ErpUpdaterJob
+      # job or even the name of the callback.
+      # But instead whether the job is being triggered in an async manner
+      # once an order is being created
+      expect(ErpUpdaterJob).to receive(:perform_later).exactly(:once)
+      create(:order)
+    end
+  end
 end

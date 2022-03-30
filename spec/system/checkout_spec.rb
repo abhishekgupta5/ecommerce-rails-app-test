@@ -1,5 +1,6 @@
 RSpec.describe "Checkout" do
-  it "can be completed for a valid country" do
+  it "can be completed for a valid country and ERP data updated" do
+    ActiveJob::Base.queue_adapter = :test
     create(:product)
     order = attributes_for(:order)
     shipping_address = attributes_for(:address)
@@ -27,6 +28,11 @@ RSpec.describe "Checkout" do
     # expect delivery info on summary page
     expect(page).to have_content("THANK YOU!")
     expect_delivery_info_on_page(shipping_method)
+
+    # Note: Whether the job got Enqueued is enough to check here. We don't need to
+    # check the exact data when the job finishes. That will be covered in other specs
+    # related to the work being done in the job
+    expect(ErpUpdaterJob).to have_been_enqueued
   end
 
   it "shouldn't allow submission for country where delivery isn't supported" do
