@@ -10,6 +10,9 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :credit_card
 
   validates :email, presence: true, format: URI::MailTo::EMAIL_REGEXP
+  # We don't support order creation for countries where we don't
+  # have a shipping method.
+  validate :deliverable_shipping_country
 
   # Happens async since this depends upon another API call.
   # We don't want our app server to wait for an external call.
@@ -29,5 +32,11 @@ class Order < ApplicationRecord
 
   def associate_erp_and_order
     ErpUpdaterJob.perform_later(self)
+  end
+
+  def deliverable_shipping_country
+    if ShippingMethod.allowed_countries_for_shipping.exclude?(shipping_address.country)
+      errors.add(:shipping_address, "We don't deliver to #{shipping_address.country} yet")
+    end
   end
 end
