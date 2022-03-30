@@ -11,25 +11,18 @@ class ErpClient
     @address = order.shipping_address
   end
 
-  def post(body: {})
-    handle_errors(body)
+  # ERP_ENDPOINT
+  def erp_for_order
+    post(ERP_ENDPOINT, erp_for_order_payload)
   end
 
   private
 
-  def handle_errors(body)
-    response = self.class.post(ERP_ENDPOINT, body: body.merge!(order_payload).to_json, headers: auth_headers)
-    case response.code
-    when 201
-      response
-    when (400..499)
-      raise ErpClientError
-    when (500..599)
-      raise ErpServerError
-    end
-  end
-
-  def order_payload
+  # Body constructor for ERP_ENDPOINT
+  # This is kept here because - in case the schema
+  # of the ERP_ENDPOINT changes, we will only need to change this method here.
+  # Change will only be in the client, hidden from rest of the application
+  def erp_for_order_payload
     # This will generate only 2 DB queries.
     # 1. To get line_items scoped by orders
     # 2. To get products scoped by line items
@@ -54,6 +47,30 @@ class ErpClient
     }
   end
 
+  # @param uri [String] client endpoint
+  # @param body [Hash] post request body
+  # @return [Hash] parsed response from API
+  # Raises client or server error when encountered
+  # Genereic post request to interact with ERP client
+  def post(uri, body)
+    handle_errors(uri, body).parsed_response
+  end
+
+  # Generic error handler. Handles success, ClientError
+  # and ServerError
+  def handle_errors(uri, body)
+    response = self.class.post(uri, body: body.to_json, headers: auth_headers)
+    case response.code
+    when 201
+      response
+    when (400..499)
+      raise ErpClientError
+    when (500..599)
+      raise ErpServerError
+    end
+  end
+
+  # Generic auth headers
   def auth_headers
     {"Content-Type" => "application/json",
      "Accept" => "application/json"}

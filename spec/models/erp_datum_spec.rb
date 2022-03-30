@@ -34,7 +34,7 @@ RSpec.describe ErpDatum, type: :model do
     def stub_erp_client_response(order)
       client = double("ErpClient")
       allow(ErpClient).to receive(:new).with(order) { client }
-      allow(client).to receive(:post) { client_response }
+      allow(client).to receive(:erp_for_order) { client_response }
     end
   end
 end

@@ -14,7 +14,7 @@ class ErpDatum < ApplicationRecord
     private
 
     def fetch(order)
-      ErpClient.new(order).post["id"]
+      ErpClient.new(order).erp_for_order["id"]
     end
 
     def save_in_db(entity_id, order)
