@@ -36,6 +36,9 @@ gem "image_processing"
 # Schema validation
 gem "json-schema"
 
+# For HTTP requests
+gem "httparty"
+
 group :development, :test do
   # Debugging
   gem "debug", platforms: %i[mri mingw x64_mingw]
