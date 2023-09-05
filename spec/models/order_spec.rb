@@ -1,6 +1,17 @@
 RSpec.describe Order do
+  let(:shipping_method) { create(:shipping_method) }
+  let(:address) { create(:address, country: shipping_method.country) }
+
   it "has a valid factory" do
-    expect(build_stubbed(:order)).to be_valid
+    expect(build_stubbed(:order, shipping_address: address)).to be_valid
+  end
+
+  it "validates allowed_countries_for_shipping" do
+    ShippingMethod.delete_all
+    order = build_stubbed(:order)
+    expect(order).not_to be_valid
+    # Check error message
+    expect(order.errors.full_messages).to include(/We don't deliver to/)
   end
 
   it "validates the presence of email" do
@@ -52,7 +63,7 @@ RSpec.describe Order do
       # But instead whether the job is being triggered in an async manner
       # once an order is being created
       expect(ErpUpdaterJob).to receive(:perform_later).exactly(:once)
-      create(:order)
+      create(:order, shipping_address: address)
     end
   end
 end
