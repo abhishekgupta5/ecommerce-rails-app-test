@@ -7,10 +7,21 @@ class OrdersController < ApplicationController
     @order = build_order(order_params)
 
     if @order.save
+      @delivery_info = @order.shipping_info_for_order
       cart.clear
       render :summary
     else
       render :new
+    end
+  end
+
+  def delivery_info
+    @delivery_info_target = params[:delivery_info_target]
+    @submit_button_target = params[:submit_button_target]
+    @turbo_frame_target = params[:turbo_frame_target]
+    @delivery_info = ShippingMethod.delivery_info_for_country(params[:country])
+    respond_to do |format|
+      format.turbo_stream
     end
   end
 

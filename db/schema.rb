@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_21_104017) do
+ActiveRecord::Schema.define(version: 2022_03_29_171107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,15 @@ ActiveRecord::Schema.define(version: 2021_12_21_104017) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "erp_data", force: :cascade do |t|
+    t.string "entity_id", null: false
+    t.bigint "order_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["entity_id"], name: "index_erp_data_on_entity_id_uniq", unique: true
+    t.index ["order_id"], name: "index_erp_data_on_order_id_uniq", unique: true
+  end
+
   create_table "line_items", force: :cascade do |t|
     t.bigint "order_id", null: false
     t.bigint "product_id", null: false
@@ -91,6 +100,15 @@ ActiveRecord::Schema.define(version: 2021_12_21_104017) do
     t.decimal "price", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "shipping_methods", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "country", null: false
+    t.integer "delivery_time_in_days", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["country"], name: "index_shipping_methods_country_uniq", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

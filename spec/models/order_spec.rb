@@ -1,6 +1,17 @@
 RSpec.describe Order do
+  let(:shipping_method) { create(:shipping_method) }
+  let(:address) { create(:address, country: shipping_method.country) }
+
   it "has a valid factory" do
-    expect(build_stubbed(:order)).to be_valid
+    expect(build_stubbed(:order, shipping_address: address)).to be_valid
+  end
+
+  it "validates allowed_countries_for_shipping" do
+    ShippingMethod.delete_all
+    order = build_stubbed(:order)
+    expect(order).not_to be_valid
+    # Check error message
+    expect(order.errors.full_messages).to include(/We don't deliver to/)
   end
 
   it "validates the presence of email" do
@@ -21,6 +32,38 @@ RSpec.describe Order do
       end
 
       expect(order.total).to eq(35.0)
+    end
+  end
+
+  describe "#shipping_info_for_order" do
+    it "returns value when shipping method is present" do
+      address = build_stubbed(:address)
+      shipping_method = build_stubbed(:shipping_method, country: address.country)
+      build_stubbed(:order, shipping_address: address) do |o|
+        allow(o).to receive(:shipping_info_for_order).and_return({shipping_method_name: shipping_method.name,
+                                                                  delivery_time: shipping_method.delivery_time_in_days})
+      end
+    end
+
+    it "returns nil values when shipping method is absent" do
+      address = build_stubbed(:address)
+      ShippingMethod.where(country: address.country).delete_all
+      build_stubbed(:order, shipping_address: address) do |o|
+        allow(o).to receive(:shipping_info_for_order).and_return({shipping_method_name: nil,
+                                                                  delivery_time: nil})
+      end
+    end
+  end
+
+  describe "#callbacks" do
+    it "associate_erp_and_order" do
+      ActiveJob::Base.queue_adapter = :test
+      # The important thing to test here is not what happens in the ErpUpdaterJob
+      # job or even the name of the callback.
+      # But instead whether the job is being triggered in an async manner
+      # once an order is being created
+      expect(ErpUpdaterJob).to receive(:perform_later).exactly(:once)
+      create(:order, shipping_address: address)
     end
   end
 end

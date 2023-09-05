@@ -13,7 +13,7 @@ gem "cssbundling-rails"
 
 # ActiveRecord
 gem "pg", "~> 1.1"
-gem "countries"
+gem "countries", "~> 4.2"
 gem "credit_card_validations"
 
 # Infrastructure
@@ -35,6 +35,9 @@ gem "image_processing"
 
 # Schema validation
 gem "json-schema"
+
+# For HTTP requests
+gem "httparty"
 
 group :development, :test do
   # Debugging
